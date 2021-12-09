@@ -4,7 +4,7 @@ import UserList from "components/UserList";
 import { usePeopleFetch } from "hooks";
 import * as S from "./style";
 
-const Home = () => {
+const Home = ({ favoritesUsers, setToFavorites}) => {
   const { users, isLoading } = usePeopleFetch();
 
   return (
@@ -15,7 +15,12 @@ const Home = () => {
             PplFinder
           </Text>
         </S.Header>
-        <UserList users={users} isLoading={isLoading} />
+        <UserList
+          users={users}
+          isLoading={isLoading}
+          favoritesUsers={favoritesUsers}
+          setToFavorites={setToFavorites}
+        />
       </S.Content>
     </S.Home>
   );
