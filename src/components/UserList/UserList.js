@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Text from "components/Text";
 import Spinner from "components/Spinner";
 import CheckBox from "components/CheckBox";
@@ -6,7 +6,7 @@ import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import * as S from "./style";
 
-const UserList = ({ users, isLoading, setToFavorites , favoritesUsers}) => {
+const UserList = ({ users, isLoading, setToFavorites, favoritesUsers, setNational }) => {
   const [hoveredUserId, setHoveredUserId] = useState();
 
   const handleMouseEnter = (index) => {
@@ -17,13 +17,18 @@ const UserList = ({ users, isLoading, setToFavorites , favoritesUsers}) => {
     setHoveredUserId();
   };
 
+  const setFilterValue = (value) => {
+    setNational && setNational(value);
+  };
+
   return (
     <S.UserList>
       <S.Filters>
-        <CheckBox value="BR" label="Brazil" />
-        <CheckBox value="AU" label="Australia" />
-        <CheckBox value="CA" label="Canada" />
-        <CheckBox value="DE" label="Germany" />
+        <CheckBox onChange={setFilterValue} value="BR" label="Brazil" />
+        <CheckBox onChange={setFilterValue} value="AU" label="Australia" />
+        <CheckBox onChange={setFilterValue} value="CA" label="Canada" />
+        <CheckBox onChange={setFilterValue} value="DE" label="Germany" />
+        <CheckBox onChange={setFilterValue} value="GB" label="United Kingdom" />
       </S.Filters>
       <S.List>
         {users.map((user, index) => {
@@ -46,8 +51,15 @@ const UserList = ({ users, isLoading, setToFavorites , favoritesUsers}) => {
                   {user?.location.city} {user?.location.country}
                 </Text>
               </S.UserInfo>
-              <S.IconButtonWrapper isVisible={index === hoveredUserId || favoritesUsers.findIndex(favoriteUser => favoriteUser.id.value === user.id.value) !== -1 }>
-                <IconButton onClick={()=>setToFavorites(user)}>
+              <S.IconButtonWrapper
+                isVisible={
+                  index === hoveredUserId ||
+                  favoritesUsers.findIndex(
+                    (favoriteUser) => favoriteUser.id.value === user.id.value
+                  ) !== -1
+                }
+              >
+                <IconButton onClick={() => setToFavorites(user)}>
                   <FavoriteIcon color="error" />
                 </IconButton>
               </S.IconButtonWrapper>

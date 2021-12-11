@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { Home } from "pages";
 import { ThemeProvider } from "theme";
@@ -12,7 +12,8 @@ const AppRouter = () => {
   const setToFavorites = (user) => {
     if (
       favoritesUsers.findIndex(
-        (favoriteUser) => favoriteUser.id.value === user.id.value) === -1
+        (favoriteUser) => favoriteUser.id.value === user.id.value
+      ) === -1
     )
       setFavoritesUsers((favortiesUsers) => [...favortiesUsers, user]);
     else {
@@ -21,6 +22,15 @@ const AppRouter = () => {
       );
     }
   };
+  
+  useEffect(() => {
+    const favortiesUsersFromLS = JSON.parse(localStorage.getItem("favoritesUsers") || []);
+    setFavoritesUsers(favortiesUsersFromLS);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("favoritesUsers", JSON.stringify(favoritesUsers));
+  }, [favoritesUsers]);
 
   return (
     <ThemeProvider>
@@ -31,13 +41,20 @@ const AppRouter = () => {
             exact
             path="/"
             component={() => (
-              <Home setToFavorites={setToFavorites} favoritesUsers={favoritesUsers} />
+              <Home
+                setToFavorites={setToFavorites}
+                favoritesUsers={favoritesUsers}
+              />
             )}
           />
           <Route
             exact
-            path="/favorties"
-            component={() => (<Favorites setToFavorites={setToFavorites} favoritesUsers={favoritesUsers}/>
+            path="/favorites"
+            component={() => (
+              <Favorites
+                setToFavorites={setToFavorites}
+                favoritesUsers={favoritesUsers}
+              />
             )}
           />
         </Switch>
